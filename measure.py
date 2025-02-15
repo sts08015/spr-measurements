@@ -7,6 +7,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 import csv
+import sys
 
 # Setup environment variables for distributed processing
 os.environ['MASTER_ADDR'] = '127.0.0.1'
@@ -21,7 +22,7 @@ my_rank = dist.get_rank()
 my_size = dist.get_world_size()
 print(f"Rank {my_rank}/{my_size} initialized")
 
-tensor_sizes = [2**i for i in range(14, 38)]  # 16KiB - 256GiB (14-38)
+tensor_sizes = [2**i for i in range(13, 31)]  #13, 32
 
 # Run AllReduce for each tensor size
 results = []
@@ -40,7 +41,7 @@ def format_size(size):
 
 def warmup():
     for _ in range(10):  # Perform 10 dummy operations for warmup
-        x = torch.ones([16*1024], dtype=torch.float32)  # Dummy tensor (16 KiB)
+        x = torch.ones([8*1024], dtype=torch.float32)  # Dummy tensor (8 KiB)
         dist.all_reduce(x)
         dist.barrier()
 
@@ -78,7 +79,8 @@ for size in tensor_sizes:
     bandwidths.append(avg_bandwidth_GiBps)
 
     print(f"Tensor size: {format_size(tensor_size_bytes)} -> Average Time: {avg_elapsed_time:.6f} s, Average Bandwidth: {avg_bandwidth_GiBps:.2f} GiB/s")
-
+    sys.stdout.flush()  #to check progress
+    
 dist.barrier()  # Final sync before exiting
 
 # Save results to a CSV file
@@ -94,18 +96,20 @@ if my_rank == 0:
     
     print(f"Results saved to {csv_file}")
 
+    '''
     # Plot the results
     plt.figure(figsize=(8, 5))
     sizes_in_gib = [s / (2**30) for s in tensor_sizes]  # Convert sizes to GiB for plotting
-    plt.plot(sizes_in_gib, bandwidths, marker='o', linestyle='-', color='b', label='Average Bandwidth (GiB/s)')
-    
+    plt.plot(sizes_in_gib, times, marker='o', linestyle='-', color='r', label='Average Time (s)')
+
     plt.xticks(sizes_in_gib, [format_size(s) for s in tensor_sizes], rotation=45, ha='right')
-    
+
     plt.xlabel('Tensor Size')
-    plt.ylabel('Average Bandwidth (GiB/s)')
-    plt.title('AllReduce Average Bandwidth vs Tensor Size')
+    plt.ylabel('Average Time (seconds)')
+    plt.title('AllReduce Average Time vs Tensor Size')
     plt.legend()
     plt.grid()
     plt.tight_layout()
-    plt.savefig('allreduce_bandwidth_avg.png')
+    plt.savefig('allreduce_time_avg.png')
     plt.show()
+    '''
