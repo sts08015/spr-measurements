@@ -95,21 +95,3 @@ if my_rank == 0:
             writer.writerow([size, avg_time, avg_bandwidth])
     
     print(f"Results saved to {csv_file}")
-
-    '''
-    # Plot the results
-    plt.figure(figsize=(8, 5))
-    sizes_in_gib = [s / (2**30) for s in tensor_sizes]  # Convert sizes to GiB for plotting
-    plt.plot(sizes_in_gib, times, marker='o', linestyle='-', color='r', label='Average Time (s)')
-
-    plt.xticks(sizes_in_gib, [format_size(s) for s in tensor_sizes], rotation=45, ha='right')
-
-    plt.xlabel('Tensor Size')
-    plt.ylabel('Average Time (seconds)')
-    plt.title('AllReduce Average Time vs Tensor Size')
-    plt.legend()
-    plt.grid()
-    plt.tight_layout()
-    plt.savefig('allreduce_time_avg.png')
-    plt.show()
-    '''
