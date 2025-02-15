@@ -41,7 +41,7 @@ def format_size(size):
 
 def warmup():
     for _ in range(10):  # Perform 10 dummy operations for warmup
-        x = torch.ones([8*1024], dtype=torch.float32)  # Dummy tensor (8 KiB)
+        x = torch.ones([8*1024], dtype=torch.float32)  # Dummy tensor (32 KiB)
         dist.all_reduce(x)
         dist.barrier()
 
