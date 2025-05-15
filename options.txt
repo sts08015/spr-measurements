@@ -1,0 +1,21 @@
+vtune: Fatal error: Cannot find the analysis type. Check input parameters or reinstall the product. Available analysis types:
+        performance-snapshot
+        hotspots
+        anomaly-detection
+        memory-consumption
+        uarch-exploration
+        memory-access
+        threading
+        hpc-performance
+        io
+        exp-offload
+        gpu-offload
+        gpu-hotspots
+        fpga-interaction
+        npu
+        system-overview
+        graphics-rendering
+        tsx-exploration
+        tsx-hotspots
+        sgx-hotspots
+        aps
